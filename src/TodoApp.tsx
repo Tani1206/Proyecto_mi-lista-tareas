@@ -11,38 +11,19 @@ export const TodoApp = () => {
   const [todos, setTodos] = useState<Todo[]>(saved ? JSON.parse(saved) : myTodos);
   const [filter, setFilter] = useState("Todo");
 
-  const save = (list: Todo[]) => {
-    setTodos(list);
-    localStorage.setItem("k-todo", JSON.stringify(list));
-  };
-
-  const addTodo = (description: string) => {
-    const text = description.trim();
-    if (!text) return;
-    save([{ id: Date.now().toString(), description: text, status: false }, ...todos]);
-  };
-
-  const toggleTodo = (id: string) =>
-    save(todos.map(t => t.id === id ? { ...t, status: !t.status } : t));
-
-  const deleteTodo = (id: string) =>
-    save(todos.filter(t => t.id !== id));
-
-  const filtered = todos.filter(t =>
-    filter === "Pendiente" ? !t.status :
-    filter === "Completado" ? t.status : true
-  );
+  const save = (list: Todo[]) => { setTodos(list); localStorage.setItem("k-todo", JSON.stringify(list)); };
+  const addTodo = (description: string) => description.trim() &&
+    save([{ id: Date.now().toString(), description, status: false }, ...todos]);
+  const toggleTodo = (id: string) => save(todos.map(t => t.id === id ? { ...t, status: !t.status } : t));
+  const deleteTodo = (id: string) => save(todos.filter(t => t.id !== id));
+  const filtered = todos.filter(t => filter === "Pendiente" ? !t.status : filter === "Completado" ? t.status : true);
 
   return (
     <div className="container">
       <CustomHeader title="Mi Lista de Tareas" />
       <SearchPanel onAddTodo={addTodo} />
       <FilterButtons filter={filter} setFilter={setFilter} />
-      <TaskList
-        todos={filtered}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-      />
+      <TaskList todos={filtered} onToggle={toggleTodo} onDelete={deleteTodo} />
     </div>
   );
 };
