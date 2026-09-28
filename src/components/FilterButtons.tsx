@@ -1,6 +1,6 @@
 export const FilterButtons = ({ filter, setFilter }: any) => (
   <div className="filters">
-    {["Todo", "Pendiente", "Completado"].map(button => (
+    {["Todos", "Pendiente", "Completado"].map(button => (
       <button
         key={button}
         className={filter === button ? "active" : ""}
